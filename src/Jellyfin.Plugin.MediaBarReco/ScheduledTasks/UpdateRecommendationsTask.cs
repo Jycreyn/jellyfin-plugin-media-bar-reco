@@ -1,9 +1,11 @@
 using System.Globalization;
+using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.MediaBarReco.Configuration;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Playlists;
 using MediaBrowser.Model.Entities;
+using MediaBrowser.Model.Playlists;
 using MediaBrowser.Model.Querying;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.Logging;
@@ -147,7 +149,7 @@ public class UpdateRecommendationsTask : IScheduledTask
             if (entryIds.Count > 0)
                 await _playlistManager.RemoveItemFromPlaylistAsync(existing.Id.ToString(), entryIds).ConfigureAwait(false);
 
-            await _playlistManager.AddItemToPlaylistAsync(existing.Id, topIds, null, user.Id).ConfigureAwait(false);
+            await _playlistManager.AddItemToPlaylistAsync(existing.Id, topIds, user.Id).ConfigureAwait(false);
         }
         else
         {
@@ -170,7 +172,7 @@ public class UpdateRecommendationsTask : IScheduledTask
     [
         new TaskTriggerInfo
         {
-            Type = TaskTriggerInfo.TriggerDaily,
+            Type = TaskTriggerInfoType.DailyTrigger,
             TimeOfDayTicks = TimeSpan.FromHours(3).Ticks
         }
     ];
