@@ -22,7 +22,7 @@ jobs:
 
       - name: Build with JPRM
         id: jprm
-        uses: oddstr13/jellyfin-plugin-repository-manager@v1
+        uses: oddstr13/jellyfin-plugin-repository-manager@v1.1.1
         with:
           dotnet-target: net9.0
 
