@@ -1,6 +1,6 @@
 using Jellyfin.Plugin.MediaBarReco.ScheduledTasks;
-using MediaBrowser.Common.Plugins;
 using MediaBrowser.Controller;
+using MediaBrowser.Controller.Plugins;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 

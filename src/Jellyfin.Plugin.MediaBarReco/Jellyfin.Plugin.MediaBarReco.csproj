@@ -5,6 +5,7 @@
     <RootNamespace>Jellyfin.Plugin.MediaBarReco</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
