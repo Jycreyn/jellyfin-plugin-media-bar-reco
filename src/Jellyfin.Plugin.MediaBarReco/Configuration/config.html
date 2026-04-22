@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Media Bar Recommendations</title>
+</head>
+<body>
+<div data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-select">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="MediaBarRecoForm">
+
+                <div class="sectionTitleContainer flex align-items-center">
+                    <h2 class="sectionTitle">Media Bar Recommendations</h2>
+                </div>
+
+                <br/>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="UserId">User</label>
+                    <select id="UserId" name="UserId" class="emby-select-withcolor emby-select"></select>
+                    <div class="fieldDescription">Watch history from this user will drive the recommendations.</div>
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="PlaylistName">Playlist name</label>
+                    <input type="text" id="PlaylistName" name="PlaylistName" class="emby-input" />
+                    <div class="fieldDescription">
+                        The plugin will create/maintain a playlist with this name.
+                        Set this same name as "Avatars Playlist" in the Media Bar plugin settings.
+                    </div>
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="TopN">Number of items in playlist</label>
+                    <input type="number" id="TopN" name="TopN" class="emby-input" min="5" max="50" />
+                    <div class="fieldDescription">How many movies to include (5–50).</div>
+                </div>
+
+                <br/>
+                <h3 class="sectionTitle">Scoring weights</h3>
+                <p class="fieldDescription">Each factor contributes independently — they don't need to sum to 1.</p>
+                <br/>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="RatingWeight">Community rating weight</label>
+                    <input type="number" id="RatingWeight" name="RatingWeight" class="emby-input" min="0" max="1" step="0.05" />
+                    <div class="fieldDescription">Importance of the IMDB/TMDB score (0 = ignored, 1 = strong).</div>
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="GenreWeight">Genre affinity weight</label>
+                    <input type="number" id="GenreWeight" name="GenreWeight" class="emby-input" min="0" max="1" step="0.05" />
+                    <div class="fieldDescription">Importance of matching genres from your watch history.</div>
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="RecencyWeight">Recency weight</label>
+                    <input type="number" id="RecencyWeight" name="RecencyWeight" class="emby-input" min="0" max="1" step="0.05" />
+                    <div class="fieldDescription">Bonus for movies recently added to the library.</div>
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="RecencyDays">Recency window (days)</label>
+                    <input type="number" id="RecencyDays" name="RecencyDays" class="emby-input" min="7" max="365" />
+                    <div class="fieldDescription">Movies added within this many days are eligible for the recency bonus.</div>
+                </div>
+
+                <br/>
+
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                        <span>Save</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var MediaBarRecoConfig = {
+        pluginUniqueId: 'c7a3f2e1-9b4d-4e8a-b6c0-d2e5f1a3b7c9',
+
+        load: function (page) {
+            ApiClient.getUsers().then(function (users) {
+                var select = page.querySelector('#UserId');
+                select.innerHTML = users.map(function (u) {
+                    return '<option value="' + u.Id + '">' + u.Name + '</option>';
+                }).join('');
+
+                ApiClient.getPluginConfiguration(MediaBarRecoConfig.pluginUniqueId).then(function (config) {
+                    select.value               = config.UserId        || '';
+                    page.querySelector('#PlaylistName').value   = config.PlaylistName  || 'Featured Recommendations';
+                    page.querySelector('#TopN').value           = config.TopN          || 15;
+                    page.querySelector('#RatingWeight').value   = config.RatingWeight  || 0.5;
+                    page.querySelector('#GenreWeight').value    = config.GenreWeight   || 0.3;
+                    page.querySelector('#RecencyWeight').value  = config.RecencyWeight || 0.2;
+                    page.querySelector('#RecencyDays').value    = config.RecencyDays   || 90;
+                });
+            });
+        },
+
+        save: function (page) {
+            ApiClient.getPluginConfiguration(MediaBarRecoConfig.pluginUniqueId).then(function (config) {
+                config.UserId        = page.querySelector('#UserId').value;
+                config.PlaylistName  = page.querySelector('#PlaylistName').value;
+                config.TopN          = parseInt(page.querySelector('#TopN').value, 10);
+                config.RatingWeight  = parseFloat(page.querySelector('#RatingWeight').value);
+                config.GenreWeight   = parseFloat(page.querySelector('#GenreWeight').value);
+                config.RecencyWeight = parseFloat(page.querySelector('#RecencyWeight').value);
+                config.RecencyDays   = parseInt(page.querySelector('#RecencyDays').value, 10);
+
+                ApiClient.updatePluginConfiguration(MediaBarRecoConfig.pluginUniqueId, config).then(function () {
+                    Dashboard.processPluginConfigurationUpdateResult();
+                });
+            });
+        }
+    };
+
+    window.ApiClient && MediaBarRecoConfig.load(document);
+
+    document.querySelector('#MediaBarRecoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        MediaBarRecoConfig.save(document);
+    });
+</script>
+</body>
+</html>

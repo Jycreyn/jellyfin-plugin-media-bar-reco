@@ -1,0 +1,18 @@
+---
+name: "Media Bar Recommendations"
+guid: "c7a3f2e1-9b4d-4e8a-b6c0-d2e5f1a3b7c9"
+version: "1.0.0.0"
+targetAbi: "10.11.0.0"
+framework: "net9.0"
+overview: "Smart recommendations for the Media Bar plugin."
+description: >
+  Automatically scores and ranks your unwatched movies based on your watch
+  history (genre affinity, community rating, and recency), then updates a
+  Jellyfin playlist that the Media Bar plugin uses as its featured content.
+  No Docker container needed — runs as a native Jellyfin scheduled task.
+category: "General"
+owner: "Jycreyn"
+artifacts:
+  - "Jellyfin.Plugin.MediaBarReco.dll"
+changelog: >
+  Initial release.

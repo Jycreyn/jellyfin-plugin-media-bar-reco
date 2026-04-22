@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Jellyfin.Plugin.MediaBarReco</AssemblyName>
+    <RootNamespace>Jellyfin.Plugin.MediaBarReco</RootNamespace>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration/config.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.0" />
+    <PackageReference Include="Jellyfin.Model" Version="10.11.0" />
+  </ItemGroup>
+
+</Project>
